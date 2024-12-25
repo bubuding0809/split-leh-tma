@@ -17,6 +17,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.50.0
         version: 5.62.10(react@18.3.1)
+      '@telegram-apps/sdk-react':
+        specifier: ^2.0.22
+        version: 2.0.22(@types/react@18.3.18)(react@18.3.1)
       '@trpc/client':
         specifier: ^11.0.0-rc.446
         version: 11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.2))(typescript@5.7.2)
@@ -66,6 +69,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.1.0
         version: 8.18.2(eslint@8.57.1)(typescript@5.7.2)
+      eruda:
+        specifier: ^3.4.1
+        version: 3.4.1
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
@@ -393,6 +399,36 @@ packages:
     resolution: {integrity: sha512-1e1WpHM5oGf27nWM/NWLY62/X9pbMBWa6ErWYmeuK0OqB9/g9UzA59ogiWbxCmS2wtAFQRhOdHhfSofrkhPl2g==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@telegram-apps/bridge@1.9.0':
+    resolution: {integrity: sha512-sdQLwcBxBKYSe8ydoahVbVzyUM5tYWnjOcmr5VsSXuem6z8MnPd1uu6/MrDCRFsMKm/fZQoayu4IImD1OEWnCw==}
+
+  '@telegram-apps/navigation@1.0.11':
+    resolution: {integrity: sha512-KJx7/RPJ0RGVCs/F7ayn7VCawFuoNEBWse7rugRjAdhohAJiPz3Q3XPY8Up4iqVEuSCaO6T+7S6+a3M+FhJpqQ==}
+
+  '@telegram-apps/sdk-react@2.0.22':
+    resolution: {integrity: sha512-6GCAebJPHWx69ep5DTmCLCvc1dhoRnyqcSkhS84DFt1sCXK99p0trPTApEpBxvy315CDDlqoF8TOOXeTw9xsOA==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@telegram-apps/sdk@2.11.0':
+    resolution: {integrity: sha512-Tm6qgSh+RMTWlRr9cSNqHkG/2g0xtLGzafMYsqsHspd7l+/3Ztb6+Of5I5JAxRxV2/P4eeq2jurl4WG0e0ntTg==}
+
+  '@telegram-apps/signals@1.1.0':
+    resolution: {integrity: sha512-5qN7cU8t3l7n0cKcnzc/1TYKJTwAggUinfwbLHL1SYmB47pBHjCvfsRiYliFohk6lb635SBmNuVZL6LHFmGZaw==}
+
+  '@telegram-apps/toolkit@1.1.0':
+    resolution: {integrity: sha512-fJAxbvfTjp8MWKEb4oR8Fr8NppxSE4FZ8utNLClBMbC8or3vNZfvNzwHLMhltD4YWHdxLuMH6mnmo+BZLSUSzg==}
+
+  '@telegram-apps/transformers@1.2.1':
+    resolution: {integrity: sha512-BDMBZhsyLgt06bAB7gXX3Y46JSiXHivtMsV45WaB3xqfkhf3FcwSMQj6b7fkqHXjpGXPVun+snjSArHMPIVmJQ==}
+
+  '@telegram-apps/types@1.2.0':
+    resolution: {integrity: sha512-HhvnSCsqlJpes5ZGsZP/qbDNq8eLLnjgZKaF5NRsDqAKUPvaIIFT1HdyDII/8EioUgoI4FHsP8MylK2Gzm2efg==}
 
   '@trpc/client@11.0.0-rc.666':
     resolution: {integrity: sha512-BP3H0bktY03m7haVT5QoPR4sn30DNJcvFHsA3Msj3uPRY8JLVE03MR4rVG6T7VbcglORKpyMlRxjpUgdRmJErA==}
@@ -770,6 +806,9 @@ packages:
   enhanced-resolve@5.18.0:
     resolution: {integrity: sha512-0/r0MySGYG8YqlayBZ6MuCfECmHFdJ5qyPh8s8wa5Hnm6SaFLSK1VYCbj+NKp090Nm1caZhD+QTnmxO7esYGyQ==}
     engines: {node: '>=10.13.0'}
+
+  eruda@3.4.1:
+    resolution: {integrity: sha512-RmaO5yD97URY/9Q0lye3cmmNPoXNKreeePIw7c/zllbscR92CjGFZFuQ70+0fLIvLcKW3Xha8DS8NFhmeNbEBQ==}
 
   es-abstract@1.23.7:
     resolution: {integrity: sha512-OygGC8kIcDhXX+6yAZRGLqwi2CmEXCbLQixeGUgYeR+Qwlppqmo7DIDr8XibtEBZp+fJcoYpoatp5qwLMEdcqQ==}
@@ -2142,6 +2181,45 @@ snapshots:
       '@tanstack/query-core': 5.62.9
       react: 18.3.1
 
+  '@telegram-apps/bridge@1.9.0':
+    dependencies:
+      '@telegram-apps/signals': 1.1.0
+      '@telegram-apps/toolkit': 1.1.0
+      '@telegram-apps/transformers': 1.2.1
+      '@telegram-apps/types': 1.2.0
+
+  '@telegram-apps/navigation@1.0.11':
+    dependencies:
+      '@telegram-apps/bridge': 1.9.0
+      '@telegram-apps/signals': 1.1.0
+      '@telegram-apps/toolkit': 1.1.0
+
+  '@telegram-apps/sdk-react@2.0.22(@types/react@18.3.18)(react@18.3.1)':
+    dependencies:
+      '@telegram-apps/sdk': 2.11.0
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.18
+
+  '@telegram-apps/sdk@2.11.0':
+    dependencies:
+      '@telegram-apps/bridge': 1.9.0
+      '@telegram-apps/navigation': 1.0.11
+      '@telegram-apps/signals': 1.1.0
+      '@telegram-apps/toolkit': 1.1.0
+      '@telegram-apps/transformers': 1.2.1
+
+  '@telegram-apps/signals@1.1.0': {}
+
+  '@telegram-apps/toolkit@1.1.0': {}
+
+  '@telegram-apps/transformers@1.2.1':
+    dependencies:
+      '@telegram-apps/toolkit': 1.1.0
+      '@telegram-apps/types': 1.2.0
+
+  '@telegram-apps/types@1.2.0': {}
+
   '@trpc/client@11.0.0-rc.666(@trpc/server@11.0.0-rc.666(typescript@5.7.2))(typescript@5.7.2)':
     dependencies:
       '@trpc/server': 11.0.0-rc.666(typescript@5.7.2)
@@ -2559,6 +2637,8 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.1
+
+  eruda@3.4.1: {}
 
   es-abstract@1.23.7:
     dependencies:
