@@ -5,15 +5,12 @@ import { api } from "#/utils/api";
 import {
   backButton,
   mainButton,
-  isBackButtonVisible,
   initData,
   secondaryButton,
   retrieveLaunchParams,
   postEvent,
 } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
-
-import "#/styles/globals.css";
 
 export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
@@ -62,7 +59,7 @@ export default function Home() {
         <div id="content">
           <main className="flex min-h-screen flex-col items-center justify-center bg-white">
             <h1 className="py-10 text-xl font-bold">🤑 Split Leh</h1>
-            <div className="mt-2 rounded-md border bg-white p-2 font-medium">
+            <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
               <span>🚧 Under Construction</span>
             </div>
           </main>

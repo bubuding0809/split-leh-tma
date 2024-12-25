@@ -5,6 +5,8 @@ import { init as initTma } from "@telegram-apps/sdk-react";
 
 import { api } from "#/utils/api";
 
+import "#/styles/globals.css";
+
 // Initialize eruda (mobile debugger) in development mode when running in browser
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   const initEruda = async () => {
