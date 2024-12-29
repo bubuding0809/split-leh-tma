@@ -54,10 +54,6 @@ const Home: NextPageWithLayout = () => {
 
   useEffect(() => {
     enableSticky();
-
-    if (initData.startParam() === "group") {
-      postEvent("web_app_exit_fullscreen");
-    }
   }, []);
 
   return (
