@@ -1,11 +1,19 @@
 import Head from "next/head";
 import { GeistSans } from "geist/font/sans";
-import { type AppType } from "next/app";
+import { AppProps, type AppType } from "next/app";
 import { init as initTma } from "@telegram-apps/sdk-react";
-
 import { api } from "#/utils/api";
-
 import "#/styles/globals.css";
+import { NextPage } from "next";
+import { ReactNode, ReactElement } from "react";
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 // Initialize eruda (mobile debugger) in development mode when running in browser
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
@@ -21,7 +29,9 @@ if (typeof window !== "undefined") {
   initTma();
 }
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <div className={GeistSans.className}>
       <Head>
@@ -32,7 +42,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       </Head>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </div>
   );
 };

@@ -1,7 +1,7 @@
+"use client";
+
 import Head from "next/head";
-
-import { api } from "#/utils/api";
-
+import { NextPageWithLayout } from "#/pages/_app";
 import {
   backButton,
   mainButton,
@@ -9,18 +9,32 @@ import {
   secondaryButton,
   retrieveLaunchParams,
   postEvent,
+  viewport,
+  isFullscreen,
+  requestFullscreen,
+  exitFullscreen,
+  useSignal,
 } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
+import TmaSdkProvider from "#/components/layouts/TmaSsrLoader";
 
-export default function Home() {
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
-
+const Home: NextPageWithLayout = () => {
   useEffect(() => {
+    initData.restore();
     backButton.mount();
     mainButton.mount();
-    initData.restore();
     secondaryButton.mount();
+    viewport.mount();
+
+    return () => {
+      backButton.unmount();
+      mainButton.unmount();
+      secondaryButton.unmount();
+      viewport.unmount();
+    };
   }, []);
+
+  const isTmaFullScreen = useSignal(viewport.isFullscreen);
 
   const enableSticky = () => {
     const lp = retrieveLaunchParams();
@@ -30,8 +44,8 @@ export default function Home() {
       return;
     }
 
-    // Expand the application.
     postEvent("web_app_expand");
+    postEvent("web_app_request_fullscreen");
 
     document.body.classList.add("mobile-body");
     document.getElementById("wrap")?.classList.add("mobile-wrap");
@@ -40,6 +54,10 @@ export default function Home() {
 
   useEffect(() => {
     enableSticky();
+
+    if (initData.startParam() === "group") {
+      postEvent("web_app_exit_fullscreen");
+    }
   }, []);
 
   return (
@@ -59,12 +77,31 @@ export default function Home() {
         <div id="content">
           <main className="flex min-h-screen flex-col items-center justify-center bg-white">
             <h1 className="py-10 text-xl font-bold">🤑 Split Leh</h1>
-            <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
-              <span>🚧 Under Construction</span>
+            <div className="flex flex-col gap-4">
+              <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
+                <span>🚧 Under Construction</span>
+              </div>
+              <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
+                <button
+                  onClick={() =>
+                    isTmaFullScreen
+                      ? viewport.exitFullscreen()
+                      : viewport.requestFullscreen()
+                  }
+                >
+                  {isTmaFullScreen ? "full" : "not-full"}
+                </button>
+              </div>
             </div>
           </main>
         </div>
       </div>
     </>
   );
-}
+};
+
+Home.getLayout = (page) => {
+  return <TmaSdkProvider>{page}</TmaSdkProvider>;
+};
+
+export default Home;
