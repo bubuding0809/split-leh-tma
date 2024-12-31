@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "#/server/api/trpc";
 
-export const postRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
@@ -10,4 +10,8 @@ export const postRouter = createTRPCRouter({
         greeting: `Hello ${input.text}`,
       };
     }),
+
+  getUsers: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.user.findMany();
+  }),
 });

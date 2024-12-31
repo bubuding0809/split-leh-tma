@@ -17,8 +17,12 @@ import {
 } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
 import TmaSdkProvider from "#/components/layouts/TmaSsrLoader";
+import { api } from "#/utils/api";
 
 const Home: NextPageWithLayout = () => {
+  const { data: users } = api.user.getUsers.useQuery();
+  console.log(users);
+
   useEffect(() => {
     initData.restore();
     backButton.mount();
