@@ -29,6 +29,11 @@
       "#/*": ["./src/*"]
     }
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
   "include": [
     ".eslintrc.cjs",
     "next-env.d.ts",

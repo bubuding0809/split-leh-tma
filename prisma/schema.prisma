@@ -1,20 +1,100 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+enum ChatType {
+    private
+    group
+    supergroup
+    channel
+    sender
+}
+
+model Chat {
+    id        Int          @id
+    title     String
+    type      ChatType
+    members   User[]
+    expenses  Expense[]
+    transfers Settlement[]
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+}
+
+model User {
+    id                Int            @id
+    firstName         String
+    lastName          String?
+    username          String?
+    chats             Chat[]
+    createdExpenses   Expense[]      @relation("Creator")
+    involvedExpenses  Expense[]      @relation("Participants")
+    sentTransfers     Settlement[]   @relation("Sender")
+    receivedTransfers Settlement[]   @relation("Receiver")
+    expenseShares     ExpenseShare[]
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
+}
+
+enum SplitMode {
+    EQUAL // Split evenly among participants
+    PERCENTAGE // Each participant pays a specific percentage
+    EXACT // Each participant pays a predefined exact amount
+    SHARES // Split based on individual share quantities
+}
+
+model Expense {
+    id           String         @id @default(uuid())
+    chat         Chat           @relation(fields: [chatId], references: [id], onDelete: Cascade)
+    chatId       Int
+    date         DateTime       @default(now())
+    creator      User           @relation("Creator", fields: [creatorId], references: [id], onDelete: Cascade)
+    creatorId    Int
+    description  String
+    amount       Decimal        @db.Decimal(10, 2)
+    splitMode    SplitMode
+    participants User[]         @relation("Participants")
+    shares       ExpenseShare[]
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
+
+    @@index([chatId]) // Optimizes queries filtering/aggregating expenses by chat
+    @@index([creatorId]) // Improves performance when looking up expenses created by a specific user
+}
+
+model ExpenseShare {
+    expense   Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+    expenseId String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    Int
+    amount    Decimal? @db.Decimal(10, 2)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([name])
+    @@id([expenseId, userId])
+}
+
+model Settlement {
+    id          String   @id @default(uuid())
+    chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+    chatId      Int
+    date        DateTime @default(now())
+    sender      User     @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+    senderId    Int
+    receiver    User     @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+    receiverId  Int
+    amount      Decimal  @db.Decimal(10, 2)
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([chatId]) // Speeds up queries filtering settlements within a specific chat
+    @@index([senderId]) // Improves performance when querying settlements sent by a user
+    @@index([receiverId]) // Optimizes lookups of settlements received by a user
 }
