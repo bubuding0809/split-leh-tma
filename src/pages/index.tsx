@@ -9,36 +9,29 @@ import {
   secondaryButton,
   retrieveLaunchParams,
   postEvent,
-  viewport,
-  isFullscreen,
-  requestFullscreen,
-  exitFullscreen,
+  initDataStartParam,
   useSignal,
 } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
-import TmaSdkProvider from "#/components/layouts/TmaSsrLoader";
-import { api } from "#/utils/api";
+import TmaSdkProvider from "#/components/layouts/TmaSdkProvider";
 
 const Home: NextPageWithLayout = () => {
-  const { data: users } = api.user.getUsers.useQuery();
-  console.log(users);
-
   useEffect(() => {
     initData.restore();
     backButton.mount();
     mainButton.mount();
     secondaryButton.mount();
-    viewport.mount();
 
     return () => {
       backButton.unmount();
       mainButton.unmount();
       secondaryButton.unmount();
-      viewport.unmount();
     };
   }, []);
 
-  const isTmaFullScreen = useSignal(viewport.isFullscreen);
+  const tmaStartParam = useSignal(initDataStartParam);
+  const startParamDataStr = atob(tmaStartParam ?? "");
+  const startParamData = JSON.parse(startParamDataStr || "{}");
 
   const enableSticky = () => {
     const lp = retrieveLaunchParams();
@@ -82,15 +75,7 @@ const Home: NextPageWithLayout = () => {
                 <span>🚧 Under Construction</span>
               </div>
               <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
-                <button
-                  onClick={() =>
-                    isTmaFullScreen
-                      ? viewport.exitFullscreen()
-                      : viewport.requestFullscreen()
-                  }
-                >
-                  {isTmaFullScreen ? "full" : "not-full"}
-                </button>
+                startParam:<pre>{JSON.stringify(startParamData, null, 2)}</pre>
               </div>
             </div>
           </main>
