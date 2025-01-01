@@ -1,4 +1,9 @@
-import { initDataStartParam, useSignal } from "@telegram-apps/sdk-react";
+import {
+  initDataStartParam,
+  useSignal,
+  initData,
+  useLaunchParams,
+} from "@telegram-apps/sdk-react";
 import { z } from "zod";
 
 const startParamSchema = z
@@ -9,7 +14,7 @@ const startParamSchema = z
   .nullable();
 
 const useStartParams = () => {
-  const tmaStartParam = useSignal(initDataStartParam);
+  const { startParam: tmaStartParam } = useLaunchParams();
 
   if (!tmaStartParam) {
     return null;
