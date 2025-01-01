@@ -1,17 +1,10 @@
-import {
-  initDataStartParam,
-  useSignal,
-  initData,
-  useLaunchParams,
-} from "@telegram-apps/sdk-react";
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 import { z } from "zod";
 
-const startParamSchema = z
-  .object({
-    chat_id: z.number().optional(),
-    chat_type: z.string().optional(),
-  })
-  .nullable();
+const startParamSchema = z.object({
+  chat_id: z.number().optional(),
+  chat_type: z.string().optional(),
+});
 
 const useStartParams = () => {
   const { startParam: tmaStartParam } = useLaunchParams();
