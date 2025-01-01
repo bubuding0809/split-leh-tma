@@ -1,58 +1,13 @@
-"use client";
-
 import Head from "next/head";
 import { NextPageWithLayout } from "#/pages/_app";
-import {
-  backButton,
-  mainButton,
-  initData,
-  secondaryButton,
-  retrieveLaunchParams,
-  postEvent,
-  initDataStartParam,
-  useSignal,
-} from "@telegram-apps/sdk-react";
-import { useEffect } from "react";
 import TmaSdkProvider from "#/components/layouts/TmaSdkProvider";
+import useStartParams from "#/lib/hooks/tma/useStartParams";
+import { Placeholder, Text, Title } from "@telegram-apps/telegram-ui";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 
 const Home: NextPageWithLayout = () => {
-  useEffect(() => {
-    initData.restore();
-    backButton.mount();
-    mainButton.mount();
-    secondaryButton.mount();
-
-    return () => {
-      backButton.unmount();
-      mainButton.unmount();
-      secondaryButton.unmount();
-    };
-  }, []);
-
-  const tmaStartParam = useSignal(initDataStartParam);
-  const startParamDataStr = atob(tmaStartParam ?? "");
-  const startParamData = JSON.parse(startParamDataStr || "{}");
-
-  const enableSticky = () => {
-    const lp = retrieveLaunchParams();
-
-    // Some versions of Telegram don't need the classes above.
-    if (["macos", "tdesktop", "weba", "web", "webk"].includes(lp.platform)) {
-      return;
-    }
-
-    postEvent("web_app_expand");
-    postEvent("web_app_request_fullscreen");
-
-    document.body.classList.add("mobile-body");
-    document.getElementById("wrap")?.classList.add("mobile-wrap");
-    document.getElementById("content")?.classList.add("mobile-content");
-  };
-
-  useEffect(() => {
-    enableSticky();
-  }, []);
-
   return (
     <>
       <Head>
@@ -66,21 +21,23 @@ const Home: NextPageWithLayout = () => {
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤑</text></svg>"
         />
       </Head>
-      <div id="wrap">
-        <div id="content">
-          <main className="flex min-h-screen flex-col items-center justify-center bg-white">
-            <h1 className="py-10 text-xl font-bold">🤑 Split Leh</h1>
-            <div className="flex flex-col gap-4">
-              <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
-                <span>🚧 Under Construction</span>
-              </div>
-              <div className="mt-2 rounded-md border bg-white p-2 font-medium shadow-md">
-                startParam:<pre>{JSON.stringify(startParamData, null, 2)}</pre>
-              </div>
-            </div>
-          </main>
+
+      <main className="flex min-h-screen flex-col items-center justify-center gap-y-4">
+        <Title weight="1">🤑 Split Leh</Title>
+        <div className="flex flex-col items-center justify-center gap-4">
+          <Text weight="2"></Text>
+          <Placeholder
+            description="Watch this space!"
+            header="🚧 Under Construction"
+          >
+            <img
+              alt="Telegram sticker"
+              className="blt0jZBzpxuR4oDhJc8s"
+              src="https://xelene.me/telegram.gif"
+            />
+          </Placeholder>
         </div>
-      </div>
+      </main>
     </>
   );
 };
