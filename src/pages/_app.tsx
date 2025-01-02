@@ -1,10 +1,10 @@
 import Head from "next/head";
 import { AppProps, type AppType } from "next/app";
 import {
+  initData,
   init as initTma,
   postEvent,
   retrieveLaunchParams,
-  useLaunchParams,
 } from "@telegram-apps/sdk-react";
 import { api } from "#/utils/api";
 import { NextPage } from "next";
@@ -23,6 +23,11 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
 // Initialize eruda (mobile debugger) in development mode when running in browser
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   const initEruda = async () => {
@@ -32,20 +37,14 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   initEruda();
 }
 
+if (typeof window !== "undefined") {
+  initTma();
+}
+
 const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const router = useRouter();
-
-  useEffect(() => {
-    const lp = retrieveLaunchParams();
-
-    const { chatInstance } = lp.initData ?? {};
-
-    if (chatInstance) {
-      router.push(`/chat/${chatInstance}`);
-    }
-  }, []);
 
   useEffect(() => {
     const enableSticky = () => {
@@ -64,7 +63,19 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
       document.getElementById("content")?.classList.add("mobile-content");
     };
 
+    // Enable sticky mode
     enableSticky();
+
+    // Ensure initData is properly restored
+    initData.restore();
+
+    // Redirect to chat if chatInstance is present
+    const lp = retrieveLaunchParams();
+    const { chatInstance } = lp.initData ?? {};
+
+    if (chatInstance) {
+      router.push(`/chat/${chatInstance}`);
+    }
   }, []);
 
   return (

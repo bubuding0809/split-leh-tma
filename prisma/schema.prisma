@@ -17,7 +17,7 @@ enum ChatType {
 }
 
 model Chat {
-    id        Int          @id
+    id        BigInt       @id
     title     String
     type      ChatType
     members   User[]
@@ -28,7 +28,7 @@ model Chat {
 }
 
 model User {
-    id                Int            @id
+    id                BigInt         @id
     firstName         String
     lastName          String?
     username          String?
@@ -52,10 +52,10 @@ enum SplitMode {
 model Expense {
     id           String         @id @default(uuid())
     chat         Chat           @relation(fields: [chatId], references: [id], onDelete: Cascade)
-    chatId       Int
+    chatId       BigInt
     date         DateTime       @default(now())
     creator      User           @relation("Creator", fields: [creatorId], references: [id], onDelete: Cascade)
-    creatorId    Int
+    creatorId    BigInt
     description  String
     amount       Decimal        @db.Decimal(10, 2)
     splitMode    SplitMode
@@ -72,7 +72,7 @@ model ExpenseShare {
     expense   Expense  @relation(fields: [expenseId], references: [id], onDelete: Cascade)
     expenseId String
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    Int
+    userId    BigInt
     amount    Decimal? @db.Decimal(10, 2)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -83,12 +83,12 @@ model ExpenseShare {
 model Settlement {
     id          String   @id @default(uuid())
     chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-    chatId      Int
+    chatId      BigInt
     date        DateTime @default(now())
     sender      User     @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
-    senderId    Int
+    senderId    BigInt
     receiver    User     @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
-    receiverId  Int
+    receiverId  BigInt
     amount      Decimal  @db.Decimal(10, 2)
     description String?
     createdAt   DateTime @default(now())
