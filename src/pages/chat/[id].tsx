@@ -1,17 +1,17 @@
-import React from "react";
-import TmaSdkProvider from "#/components/layouts/TmaSdkProvider";
-import { NextPageWithLayout } from "#/pages/_app";
-import { Button, Title } from "@telegram-apps/telegram-ui";
-import useStartParams from "#/lib/hooks/tma/useStartParams";
-import { ChatType } from "@prisma/client";
-import { api } from "#/utils/api";
-import { initDataUser, useSignal } from "@telegram-apps/sdk-react";
+import React from 'react';
+import TmaSdkProvider from '#/components/layouts/TmaSdkProvider';
+import { NextPageWithLayout } from '#/pages/_app';
+import { Button, Title } from '@telegram-apps/telegram-ui';
+import useStartParams from '#/lib/hooks/tma/useStartParams';
+import { ChatType } from '@prisma/client';
+import { api } from '#/utils/api';
+import { initDataUser, useSignal } from '@telegram-apps/sdk-react';
 
 const Chat: NextPageWithLayout = () => {
   const tmaUser = useSignal(initDataUser);
   const startParams = useStartParams();
-  const chatType = (startParams?.chat_type ?? "private") as ChatType;
-  const isGroup = chatType === "group" || chatType === "supergroup";
+  const chatType = (startParams?.chat_type ?? 'private') as ChatType;
+  const isGroup = chatType === 'group' || chatType === 'supergroup';
 
   const userId = BigInt(tmaUser?.id ?? 0);
   const chatId = BigInt(startParams?.chat_id ?? 0);
@@ -23,7 +23,7 @@ const Chat: NextPageWithLayout = () => {
     },
     {
       enabled: !!userId,
-    },
+    }
   );
   const { data: hasMember } = api.chat.hasMember.useQuery(
     {
@@ -32,7 +32,7 @@ const Chat: NextPageWithLayout = () => {
     },
     {
       enabled: !!userId && !!chatId,
-    },
+    }
   );
   const { data: chatData } = api.chat.getChat.useQuery(
     {
@@ -40,7 +40,7 @@ const Chat: NextPageWithLayout = () => {
     },
     {
       enabled: !!chatId,
-    },
+    }
   );
   const { data: chatMembers } = api.chat.getMembers.useQuery(
     {
@@ -48,7 +48,7 @@ const Chat: NextPageWithLayout = () => {
     },
     {
       enabled: !!chatId,
-    },
+    }
   );
 
   // * ============== Mutations ========================
@@ -79,7 +79,7 @@ const Chat: NextPageWithLayout = () => {
       await createChat({
         chatId,
         chatType,
-        chatTitle: "Group",
+        chatTitle: 'Group',
       });
     }
 
@@ -91,11 +91,9 @@ const Chat: NextPageWithLayout = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4">
-      <Title>chat: {startParams?.chat_id ?? "No chat"}</Title>
+      <Title>chat: {startParams?.chat_id ?? 'No chat'}</Title>
       <pre>{JSON.stringify(startParams, null, 2)}</pre>
-      <div>
-        {canJoinGroup && <Button onClick={handleJoinGroup}>Join</Button>}
-      </div>
+      <div>{canJoinGroup && <Button onClick={handleJoinGroup}>Join</Button>}</div>
       <ol>
         <Title>Members</Title>
         {chatMembers?.map((member, index) => (
@@ -108,7 +106,7 @@ const Chat: NextPageWithLayout = () => {
   );
 };
 
-Chat.getLayout = (page) => {
+Chat.getLayout = page => {
   return <TmaSdkProvider>{page}</TmaSdkProvider>;
 };
 
