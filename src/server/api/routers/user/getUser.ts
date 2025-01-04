@@ -12,6 +12,6 @@ export const getUserHandler = async (input: z.infer<typeof inputSchema>, db: Db)
   });
 };
 
-export default publicProcedure.input(inputSchema).mutation(async ({ input, ctx }) => {
+export default publicProcedure.input(inputSchema).query(async ({ input, ctx }) => {
   return await getUserHandler(input, ctx.db);
 });
