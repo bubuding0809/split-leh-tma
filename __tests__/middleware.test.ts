@@ -7,7 +7,7 @@ describe('NextJS Middleware', () => {
   let mockRequest: NextRequest;
 
   beforeEach(() => {
-    mockRequest = new NextRequest(new Request('http://localhost:3000/api/chat'));
+    mockRequest = new NextRequest(new Request('http://localhost:3000/api/router/chat'));
   });
 
   it('should allow requests with valid authorization', async () => {

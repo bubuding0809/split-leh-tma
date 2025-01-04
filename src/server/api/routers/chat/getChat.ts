@@ -3,13 +3,16 @@ import { z } from 'zod';
 import { publicProcedure } from '../../trpc';
 
 const inputSchema = z.object({
-  chatId: z.bigint(),
+  chatId: z.number(),
 });
 
 export const getChatHandler = async (input: z.infer<typeof inputSchema>, db: Db) => {
   return await db.chat.findUnique({
     where: {
-      id: input.chatId,
+      id: BigInt(input.chatId),
+    },
+    include: {
+      members: true,
     },
   });
 };

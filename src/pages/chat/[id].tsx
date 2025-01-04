@@ -13,8 +13,8 @@ const Chat: NextPageWithLayout = () => {
   const chatType = (startParams?.chat_type ?? 'private') as ChatType;
   const isGroup = chatType === 'group' || chatType === 'supergroup';
 
-  const userId = BigInt(tmaUser?.id ?? 0);
-  const chatId = BigInt(startParams?.chat_id ?? 0);
+  const userId = tmaUser?.id ?? 0;
+  const chatId = startParams?.chat_id ?? 0;
 
   // * ============== Queries ==========================
   const { data: userData } = api.user.getUser.useQuery(

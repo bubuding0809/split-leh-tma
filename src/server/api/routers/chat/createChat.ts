@@ -5,7 +5,7 @@ import { ChatType } from '@prisma/client';
 import { getChatHandler } from './getChat';
 
 const inputSchema = z.object({
-  chatId: z.bigint(),
+  chatId: z.number(),
   chatTitle: z.string(),
   chatType: z.string(),
   chatPhoto: z.string().optional(),

@@ -2,7 +2,7 @@ import type { Db } from '#/server/db';
 import { z } from 'zod';
 import { publicProcedure } from '../../trpc';
 
-const inputSchema = z.object({ chatId: z.bigint() });
+const inputSchema = z.object({ chatId: z.number() });
 
 export const getMembersHandler = async (input: z.infer<typeof inputSchema>, db: Db) => {
   const chat = await db.chat.findUnique({

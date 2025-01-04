@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       await trpc.chat.createChat({
-        chatId: BigInt(chatId),
+        chatId,
         chatTitle,
         chatType,
         chatPhoto,

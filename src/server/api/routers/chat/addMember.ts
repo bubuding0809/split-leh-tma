@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { publicProcedure } from '../../trpc';
 
 const inputSchema = z.object({
-  chatId: z.bigint(),
-  userId: z.bigint(),
+  chatId: z.number(),
+  userId: z.number(),
 });
 
 export const addMemberHandler = async (input: z.infer<typeof inputSchema>, db: Db) => {
