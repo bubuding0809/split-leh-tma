@@ -19,6 +19,7 @@ enum ChatType {
 model Chat {
     id        BigInt       @id
     title     String
+    photo     String       @default("https://xelene.me/telegram.gif")
     type      ChatType
     members   User[]
     expenses  Expense[]
