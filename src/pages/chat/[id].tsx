@@ -54,7 +54,6 @@ const Chat: NextPageWithLayout = () => {
   // * ============== Mutations ========================
   const { mutateAsync: createUser } = api.user.createUser.useMutation();
   const { mutateAsync: addMember } = api.chat.addMember.useMutation();
-  const { mutateAsync: createChat } = api.chat.createChat.useMutation();
 
   // Can either user doesn't exist or user is not a member of the group and the chat is a group
   const canJoinGroup = (!userData || !hasMember) && isGroup;
@@ -72,14 +71,6 @@ const Chat: NextPageWithLayout = () => {
         firstName,
         lastName,
         userName,
-      });
-    }
-
-    if (!chatData) {
-      await createChat({
-        chatId,
-        chatType,
-        chatTitle: 'Group',
       });
     }
 
