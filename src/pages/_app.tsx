@@ -3,6 +3,7 @@ import { AppProps, type AppType } from 'next/app';
 import {
   initData,
   init as initTma,
+  mainButton,
   postEvent,
   retrieveLaunchParams,
 } from '@telegram-apps/sdk-react';
@@ -69,6 +70,9 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
     // Ensure initData is properly restored
     initData.restore();
 
+    // Mount required tma components
+    mainButton.mount();
+
     // Redirect to chat if chatInstance is present
     const lp = retrieveLaunchParams();
     const { chatInstance } = lp.initData ?? {};
@@ -76,6 +80,10 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
     if (chatInstance) {
       router.push(`/chat/${chatInstance}`);
     }
+
+    return () => {
+      mainButton.unmount();
+    };
   }, []);
 
   return (

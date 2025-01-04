@@ -4,10 +4,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    // Handle GET request
-    res.status(200).json({ message: 'Hello from the API!' });
-  } else if (req.method === 'POST') {
-    // Handle POST request
+    res.status(200).json({ message: 'GET chat resource still under construction' });
+    return;
+  }
+
+  if (req.method === 'POST') {
     const {
       chat_id: chatId,
       chat_title: chatTitle,
@@ -33,9 +34,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     res.status(200).json({ message: 'Created chat' });
-  } else {
-    // Handle other HTTP methods
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return;
   }
+
+  // Handle other HTTP methods
+  res.setHeader('Allow', ['GET', 'POST']);
+  res.status(405).end(`Method ${req.method} Not Allowed`);
 }

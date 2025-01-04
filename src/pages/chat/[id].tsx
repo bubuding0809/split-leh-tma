@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TmaSdkProvider from '#/components/layouts/TmaSdkProvider';
 import { NextPageWithLayout } from '#/pages/_app';
-import { Avatar, Button, Cell, Skeleton, Title } from '@telegram-apps/telegram-ui';
+import {
+  Avatar,
+  Button,
+  Cell,
+  Placeholder,
+  Skeleton,
+  Title,
+  Text,
+} from '@telegram-apps/telegram-ui';
 import useStartParams from '#/lib/hooks/tma/useStartParams';
 import { ChatType } from '@prisma/client';
 import { api } from '#/utils/api';
-import { initDataUser, useSignal } from '@telegram-apps/sdk-react';
+import { initDataUser, useSignal, mainButton } from '@telegram-apps/sdk-react';
+import { env } from '#/env';
 
 const Chat: NextPageWithLayout = () => {
   const tmaUser = useSignal(initDataUser);
@@ -35,52 +44,81 @@ const Chat: NextPageWithLayout = () => {
   );
 
   // * ============== Mutations ========================
-  const { mutateAsync: createUser } = api.user.createUser.useMutation();
   const { mutateAsync: addMember } = api.chat.addMember.useMutation();
 
   // Can either user doesn't exist or user is not a member of the group and the chat is a group
   const isMember = chatData?.members?.some(member => Number(member.id) === userId);
   const canJoinGroup = (!userData || !isMember) && isGroup && !userDataLoading && !chatDataLoading;
 
-  const handleJoinGroup = async () => {
-    if (!tmaUser) {
-      return;
-    }
+  useEffect(() => {
+    const handleJoinGroup = async () => {
+      if (!tmaUser || !userData) return;
 
-    const { firstName, lastName, username: userName } = tmaUser;
+      const { id } = userData;
+      const userId = Number(id);
 
-    if (!userData) {
-      await createUser({
+      await addMember({
+        chatId,
         userId,
-        firstName,
-        lastName,
-        userName,
       });
+    };
+
+    if (canJoinGroup) handleJoinGroup();
+  }, [canJoinGroup, tmaUser, userData]);
+
+  useEffect(() => {
+    const enableRegisterButton = () => {
+      mainButton.setParams({
+        isVisible: true,
+        isEnabled: true,
+        text: 'Register',
+      });
+      return mainButton.onClick(() => {
+        window.location.href = env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK + '?start=register';
+      });
+    };
+
+    const disableRegisterButton = () => {
+      mainButton.setParams({
+        isVisible: false,
+      });
+    };
+
+    let offMainButton: VoidFunction | undefined;
+
+    if (!userData && !userDataLoading) {
+      offMainButton = enableRegisterButton();
     }
 
-    await addMember({
-      chatId,
-      userId,
-    });
-  };
+    if (userData) {
+      disableRegisterButton();
+    }
+
+    return () => {
+      offMainButton?.();
+    };
+  }, [userData, userDataLoading]);
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4">
-      <Avatar size={96} src={chatData?.photo} />
-      <Title>chat: {startParams?.chat_id ?? 'No chat'}</Title>
-      <pre>{JSON.stringify(startParams, null, 2)}</pre>
-      <div>{canJoinGroup && <Button onClick={handleJoinGroup}>Join</Button>}</div>
+      <div className="flex items-center border rounded-full pe-2">
+        <Avatar size={40} src={chatData?.photo} />
+        <Text weight={'2'} className="ml-2">
+          {chatData?.title}
+        </Text>
+      </div>
 
-      <Skeleton visible={chatDataLoading}>
-        <ol>
-          <Title>Members</Title>
-          {chatData?.members?.map((member, index) => (
-            <li key={member.id}>
-              {index + 1}: {member.firstName}
-            </li>
-          ))}
-        </ol>
-      </Skeleton>
+      {!userData && (
+        <Placeholder
+          description="Register below to get started!"
+          header={`🥵 ${tmaUser?.firstName}, you didn't sign up yet!`}>
+          <img
+            alt="Telegram sticker"
+            className="blt0jZBzpxuR4oDhJc8s"
+            src="https://xelene.me/telegram.gif"
+          />
+        </Placeholder>
+      )}
     </div>
   );
 };

@@ -19,6 +19,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK: z.string(),
   },
 
   /**
@@ -29,6 +30,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     API_KEY: process.env.API_KEY,
+    NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK: process.env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

@@ -8,7 +8,7 @@ const inputSchema = z.object({
   chatId: z.number(),
   chatTitle: z.string(),
   chatType: z.string(),
-  chatPhoto: z.string().optional(),
+  chatPhoto: z.string().nullish(),
 });
 
 export const createChatHandler = async (input: z.infer<typeof inputSchema>, db: Db) => {
@@ -17,7 +17,9 @@ export const createChatHandler = async (input: z.infer<typeof inputSchema>, db: 
       id: input.chatId,
       title: input.chatTitle,
       type: input.chatType as ChatType,
-      photo: input.chatPhoto,
+      ...(input.chatPhoto && {
+        photo: input.chatPhoto,
+      }),
     },
   });
 };
