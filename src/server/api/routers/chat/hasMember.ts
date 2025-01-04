@@ -22,5 +22,5 @@ export const hasMemberHandler = async (input: z.infer<typeof inputSchema>, db: D
 };
 
 export default publicProcedure.input(inputSchema).query(async ({ input, ctx }) => {
-  return hasMemberHandler(input, ctx.db);
+  return await hasMemberHandler(input, ctx.db);
 });

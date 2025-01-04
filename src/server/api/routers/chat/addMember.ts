@@ -23,5 +23,5 @@ export const addMemberHandler = async (input: z.infer<typeof inputSchema>, db: D
 };
 
 export default publicProcedure.input(inputSchema).mutation(async ({ input, ctx }) => {
-  return addMemberHandler(input, ctx.db);
+  return await addMemberHandler(input, ctx.db);
 });

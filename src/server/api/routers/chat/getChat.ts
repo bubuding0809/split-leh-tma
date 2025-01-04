@@ -9,7 +9,7 @@ const inputSchema = z.object({
 export const getChatHandler = async (input: z.infer<typeof inputSchema>, db: Db) => {
   return await db.chat.findUnique({
     where: {
-      id: BigInt(input.chatId),
+      id: input.chatId,
     },
     include: {
       members: true,

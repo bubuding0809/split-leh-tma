@@ -1,7 +1,7 @@
 import React from 'react';
 import TmaSdkProvider from '#/components/layouts/TmaSdkProvider';
 import { NextPageWithLayout } from '#/pages/_app';
-import { Button, Title } from '@telegram-apps/telegram-ui';
+import { Avatar, Button, Cell, Skeleton, Title } from '@telegram-apps/telegram-ui';
 import useStartParams from '#/lib/hooks/tma/useStartParams';
 import { ChatType } from '@prisma/client';
 import { api } from '#/utils/api';
@@ -17,7 +17,7 @@ const Chat: NextPageWithLayout = () => {
   const chatId = startParams?.chat_id ?? 0;
 
   // * ============== Queries ==========================
-  const { data: userData } = api.user.getUser.useQuery(
+  const { data: userData, isLoading: userDataLoading } = api.user.getUser.useQuery(
     {
       userId,
     },
@@ -25,24 +25,7 @@ const Chat: NextPageWithLayout = () => {
       enabled: !!userId,
     }
   );
-  const { data: hasMember } = api.chat.hasMember.useQuery(
-    {
-      chatId,
-      userId,
-    },
-    {
-      enabled: !!userId && !!chatId,
-    }
-  );
-  const { data: chatData } = api.chat.getChat.useQuery(
-    {
-      chatId,
-    },
-    {
-      enabled: !!chatId,
-    }
-  );
-  const { data: chatMembers } = api.chat.getMembers.useQuery(
+  const { data: chatData, isLoading: chatDataLoading } = api.chat.getChat.useQuery(
     {
       chatId,
     },
@@ -56,7 +39,8 @@ const Chat: NextPageWithLayout = () => {
   const { mutateAsync: addMember } = api.chat.addMember.useMutation();
 
   // Can either user doesn't exist or user is not a member of the group and the chat is a group
-  const canJoinGroup = (!userData || !hasMember) && isGroup;
+  const isMember = chatData?.members?.some(member => Number(member.id) === userId);
+  const canJoinGroup = (!userData || !isMember) && isGroup && !userDataLoading && !chatDataLoading;
 
   const handleJoinGroup = async () => {
     if (!tmaUser) {
@@ -82,17 +66,21 @@ const Chat: NextPageWithLayout = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4">
+      <Avatar size={96} src={chatData?.photo} />
       <Title>chat: {startParams?.chat_id ?? 'No chat'}</Title>
       <pre>{JSON.stringify(startParams, null, 2)}</pre>
       <div>{canJoinGroup && <Button onClick={handleJoinGroup}>Join</Button>}</div>
-      <ol>
-        <Title>Members</Title>
-        {chatMembers?.map((member, index) => (
-          <li key={member.id}>
-            {index + 1}: {member.firstName}
-          </li>
-        ))}
-      </ol>
+
+      <Skeleton visible={chatDataLoading}>
+        <ol>
+          <Title>Members</Title>
+          {chatData?.members?.map((member, index) => (
+            <li key={member.id}>
+              {index + 1}: {member.firstName}
+            </li>
+          ))}
+        </ol>
+      </Skeleton>
     </div>
   );
 };
