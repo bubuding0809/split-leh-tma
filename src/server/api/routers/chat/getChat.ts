@@ -14,6 +14,6 @@ export const getChatHandler = async (input: z.infer<typeof inputSchema>, db: Db)
   });
 };
 
-export default publicProcedure.input(inputSchema).mutation(async ({ input, ctx }) => {
+export default publicProcedure.input(inputSchema).query(async ({ input, ctx }) => {
   return await getChatHandler(input, ctx.db);
 });
