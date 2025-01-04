@@ -7,8 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Handle GET request
     res.status(200).json({ message: 'Hello from the API!' });
   } else if (req.method === 'POST') {
-    console.log('REQ BODY', req.body);
-
     // Handle POST request
     const {
       chat_id: chatId,

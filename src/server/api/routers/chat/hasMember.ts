@@ -1,0 +1,26 @@
+import type { Db } from '#/server/db';
+import { z } from 'zod';
+import { publicProcedure } from '../../trpc';
+
+const inputSchema = z.object({ chatId: z.bigint(), userId: z.bigint() });
+
+export const hasMemberHandler = async (input: z.infer<typeof inputSchema>, db: Db) => {
+  const chat = await db.chat.findUnique({
+    where: {
+      id: input.chatId,
+    },
+    select: {
+      members: {
+        where: {
+          id: input.userId,
+        },
+      },
+    },
+  });
+
+  return Boolean(chat?.members.length);
+};
+
+export default publicProcedure.input(inputSchema).query(async ({ input, ctx }) => {
+  return hasMemberHandler(input, ctx.db);
+});
