@@ -73,10 +73,11 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
 
     // Redirect to chat if chatInstance is present
     const lp = retrieveLaunchParams();
-    const { chatInstance } = lp.initData ?? {};
+
+    const { chatInstance, user } = lp.initData ?? {};
 
     if (chatInstance) {
-      router.push(`/chat/${chatInstance}`);
+      router.push(`/chat/${chatInstance}?userId=${user?.id}`);
     }
 
     return () => {
