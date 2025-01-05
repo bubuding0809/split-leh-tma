@@ -4,9 +4,6 @@ import { api } from '#/utils/api';
 import { NextPage } from 'next';
 import { ReactNode, ReactElement, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-import '@telegram-apps/telegram-ui/dist/styles.css';
-
 import {
   initData,
   init as initTma,
@@ -14,6 +11,7 @@ import {
   postEvent,
   retrieveLaunchParams,
 } from '@telegram-apps/sdk-react';
+import '@telegram-apps/telegram-ui/dist/styles.css';
 import { AppRoot } from '@telegram-apps/telegram-ui';
 import '#/styles/globals.css';
 
