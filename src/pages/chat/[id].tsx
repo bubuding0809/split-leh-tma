@@ -24,10 +24,12 @@ import { env } from '#/env';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { createCaller } from '#/server/api/root';
 import { db } from '#/server/db';
+import { bot } from '#/server/tgbot';
 
 export const getServerSideProps = (async ctx => {
   const trpc = createCaller({
     db,
+    bot,
   });
 
   const { userId } = ctx.query;
@@ -73,6 +75,9 @@ const ChatPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerS
       enabled: !!chatId,
     }
   );
+  const { data: tgChat } = api.telegram.getChat.useQuery({
+    chatId,
+  });
 
   // * ============== Mutations ========================
   const { mutateAsync: addMember } = api.chat.addMember.useMutation();
@@ -133,9 +138,9 @@ const ChatPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerS
             <>
               <div className="flex justify-between w-full p-2 items-center">
                 <div className="flex items-center rounded-full pe-2">
-                  <Avatar size={40} src={chatData.photo} />
+                  <Avatar size={40} src={tgChat?.photoUrl ?? 'https://xelene.me/telegram.gif'} />
                   <Text weight={'2'} className="ml-2">
-                    {chatData.title}
+                    {tgChat?.type !== 'private' && tgChat?.title}
                   </Text>
                 </div>
                 <Button size="s" onClick={() => handleAddMembers()}>
@@ -157,6 +162,16 @@ const ChatPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerS
                 )}
               </Section>
             </>
+          )}
+
+          {chatData === undefined && (
+            <Placeholder description="" header={`🚧 Coming soon!`}>
+              <img
+                alt="Telegram sticker"
+                className="blt0jZBzpxuR4oDhJc8s"
+                src="https://xelene.me/telegram.gif"
+              />
+            </Placeholder>
           )}
         </>
       ) : (

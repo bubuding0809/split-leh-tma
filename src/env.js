@@ -10,6 +10,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
     API_KEY: z.string(),
+    TELEGRAM_BOT_TOKEN: z.string(),
   },
 
   /**
@@ -30,6 +31,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     API_KEY: process.env.API_KEY,
+    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
     NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK: process.env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
