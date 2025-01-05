@@ -95,7 +95,7 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
         />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       </Head>
-      <AppRoot platform="ios" appearance="light">
+      <AppRoot>
         <div id="wrap">
           <div id="content">{getLayout(<Component {...pageProps} />)}</div>
         </div>

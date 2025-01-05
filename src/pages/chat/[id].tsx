@@ -6,10 +6,9 @@ import {
   Button,
   Cell,
   Placeholder,
-  Skeleton,
-  Title,
   Text,
   Spinner,
+  Section,
 } from '@telegram-apps/telegram-ui';
 import useStartParams from '#/lib/hooks/tma/useStartParams';
 import { Chat, ChatType, User } from '@prisma/client';
@@ -119,18 +118,45 @@ const ChatPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerS
     };
   }, [userData]);
 
+  const handleAddMembers = () => {
+    if (!chatData) return;
+    const parameter = encodeURIComponent(`ADD_MEMBER${chatData.id}`);
+    openTelegramLink(env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK + `?start=${parameter}`);
+  };
+
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-4">
+    <div className="flex h-screen flex-col items-center gap-4 pt-24">
       {userData ? (
         <>
           {chatDataLoading && <Spinner size="m" />}
           {chatData && (
-            <div className="flex items-center border rounded-full pe-2">
-              <Avatar size={40} src={chatData.photo} />
-              <Text weight={'2'} className="ml-2">
-                {chatData.title}
-              </Text>
-            </div>
+            <>
+              <div className="flex justify-between w-full p-2 items-center">
+                <div className="flex items-center rounded-full pe-2">
+                  <Avatar size={40} src={chatData.photo} />
+                  <Text weight={'2'} className="ml-2">
+                    {chatData.title}
+                  </Text>
+                </div>
+                <Button size="s" onClick={() => handleAddMembers()}>
+                  Add Members
+                </Button>
+              </div>
+              <Section
+                footer="Only members of this group can be included in expense splits. Add them if they have not joined!"
+                header="Members">
+                {chatData.members.map(member => (
+                  <Cell before={<Avatar src="https://xelene.me/telegram.gif" />}>
+                    {member.lastName} {member.firstName}
+                  </Cell>
+                ))}
+                {chatData.members.length === 0 && (
+                  <Placeholder>
+                    <Text>😭 Group is empty</Text>
+                  </Placeholder>
+                )}
+              </Section>
+            </>
           )}
         </>
       ) : (
