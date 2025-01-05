@@ -10,10 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     const {
-      chat_id: chatId,
-      chat_title: chatTitle,
-      chat_type: chatType,
-      chat_photo_url: chatPhoto,
+      user_id: userId,
+      first_name: firstName,
+      last_name: lastName,
+      username: userName,
     } = JSON.parse(req.body);
 
     const trpc = createCaller({
@@ -21,20 +21,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     try {
-      await trpc.chat.createChat({
-        chatId,
-        chatTitle,
-        chatType,
-        chatPhoto,
+      const existingUser = await trpc.user.getUser({
+        userId,
       });
+
+      if (existingUser) {
+        res.status(200).json({ message: `User already exist: ${existingUser.id}` });
+        return;
+      }
+
+      const user = await trpc.user.createUser({
+        userId,
+        firstName,
+        lastName,
+        userName,
+      });
+      res.status(201).json({ message: `Created user: ${user.id}` });
+      return;
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Failed to create chat' });
+      res.status(500).json({ message: 'Failed to create user' });
       return;
     }
-
-    res.status(200).json({ message: 'Created chat' });
-    return;
   }
 
   // Handle other HTTP methods

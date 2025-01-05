@@ -21,20 +21,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     try {
-      await trpc.chat.createChat({
+      const existingChat = await trpc.chat.getChat({
+        chatId,
+      });
+
+      if (existingChat) {
+        res.status(200).json({ message: `Chat already exists: ${existingChat.id}` });
+        return;
+      }
+
+      const chat = await trpc.chat.createChat({
         chatId,
         chatTitle,
         chatType,
         chatPhoto,
       });
+
+      res.status(201).json({ message: `Created chat: ${chat.id}` });
+      return;
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to create chat' });
       return;
     }
-
-    res.status(200).json({ message: 'Created chat' });
-    return;
   }
 
   // Handle other HTTP methods
