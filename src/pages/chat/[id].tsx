@@ -98,39 +98,6 @@ const ChatPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerS
     if (canJoinGroup) handleJoinGroup();
   }, [canJoinGroup, tmaUser, userData]);
 
-  // useEffect(() => {
-  //   const enableRegisterButton = () => {
-  //     mainButton.setParams({
-  //       isVisible: true,
-  //       isEnabled: true,
-  //       text: 'Register',
-  //     });
-  //     return mainButton.onClick(() => {
-  //       openTelegramLink(env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK + '?start=register');
-  //     });
-  //   };
-
-  //   const disableRegisterButton = () => {
-  //     mainButton.setParams({
-  //       isVisible: false,
-  //     });
-  //   };
-
-  //   let offMainButton: VoidFunction | undefined;
-
-  //   if (!userData && !userDataLoading) {
-  //     offMainButton = enableRegisterButton();
-  //   }
-
-  //   if (userData) {
-  //     disableRegisterButton();
-  //   }
-
-  //   return () => {
-  //     offMainButton?.();
-  //   };
-  // }, [userData, userDataLoading]);
-
   useEffect(() => {
     if (userData === null) {
       mainButton.setParams({
