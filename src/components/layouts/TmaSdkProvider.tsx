@@ -1,5 +1,5 @@
-import dynamic from "next/dynamic";
-import { ReactElement } from "react";
+import dynamic from 'next/dynamic';
+import { ReactElement } from 'react';
 
 interface LaunchParamsWrapperProps {
   children: ReactElement;
