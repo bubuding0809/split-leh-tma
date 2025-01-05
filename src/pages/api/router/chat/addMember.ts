@@ -22,18 +22,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
       }
 
-      const updatedChat = await trpc.chat.addMember({
+      await trpc.chat.addMember({
         chatId,
         userId,
       });
 
-      res
-        .status(200)
-        .json({ message: `Added member: ${userId} to chat: ${chatId}`, chat: updatedChat });
+      res.status(200).json({ message: `Added member: ${userId} to chat: ${chatId}` });
       return;
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Failed to add member to chat' });
+      res.status(500).json({ message: `Failed to add member ${userId} to chat ${chatId}` });
       return;
     }
   }
