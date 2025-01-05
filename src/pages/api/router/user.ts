@@ -1,5 +1,6 @@
 import { createCaller } from '#/server/api/root';
 import { db } from '#/server/db';
+import { bot } from '#/server/tgbot';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -18,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const trpc = createCaller({
       db,
+      bot,
     });
 
     try {
