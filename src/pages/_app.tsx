@@ -1,5 +1,12 @@
 import Head from 'next/head';
 import { AppProps, type AppType } from 'next/app';
+import { api } from '#/utils/api';
+import { NextPage } from 'next';
+import { ReactNode, ReactElement, useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+import '@telegram-apps/telegram-ui/dist/styles.css';
+
 import {
   initData,
   init as initTma,
@@ -7,14 +14,8 @@ import {
   postEvent,
   retrieveLaunchParams,
 } from '@telegram-apps/sdk-react';
-import { api } from '#/utils/api';
-import { NextPage } from 'next';
-import { ReactNode, ReactElement, useEffect } from 'react';
 import { AppRoot } from '@telegram-apps/telegram-ui';
-
-import '@telegram-apps/telegram-ui/dist/styles.css';
 import '#/styles/globals.css';
-import { useRouter } from 'next/router';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -38,10 +39,6 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   initEruda();
 }
 
-if (typeof window !== 'undefined') {
-  initTma();
-}
-
 const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? (page => page);
 
@@ -63,6 +60,9 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
       document.getElementById('wrap')?.classList.add('mobile-wrap');
       document.getElementById('content')?.classList.add('mobile-content');
     };
+
+    // Initialize telegram mini app sdk
+    initTma();
 
     // Enable sticky mode
     enableSticky();
@@ -96,11 +96,11 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
         />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
       </Head>
-      <div id="wrap">
-        <div id="content">
-          <AppRoot>{getLayout(<Component {...pageProps} />)}</AppRoot>
+      <AppRoot>
+        <div id="wrap">
+          <div id="content">{getLayout(<Component {...pageProps} />)}</div>
         </div>
-      </div>
+      </AppRoot>
     </>
   );
 };
