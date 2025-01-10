@@ -110,10 +110,7 @@ const ChatPage: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerS
         hasShineEffect: true,
         isVisible: true,
       });
-      setTimeout(
-        () => openTelegramLink(env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK + '?start=register'),
-        500
-      );
+      openTelegramLink(env.NEXT_PUBLIC_TELEGRAM_BOT_BASE_LINK + '?start=register');
     }
 
     return () => {
