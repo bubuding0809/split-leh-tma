@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import { AppProps, type AppType } from 'next/app';
+import { type AppProps, type AppType } from 'next/app';
 import { api } from '#/utils/api';
-import { NextPage } from 'next';
-import { ReactNode, ReactElement, useEffect } from 'react';
+import { type NextPage } from 'next';
+import { type ReactNode, type ReactElement, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
   initData,
@@ -15,7 +15,7 @@ import '@telegram-apps/telegram-ui/dist/styles.css';
 import { AppRoot } from '@telegram-apps/telegram-ui';
 import '#/styles/globals.css';
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
@@ -23,7 +23,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-// @ts-expect-error
+// @ts-expect-error: BigInt does not have a toJSON method by default
 BigInt.prototype.toJSON = function () {
   return this.toString();
 };
@@ -34,7 +34,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     const { default: eruda } = await import('eruda');
     eruda.init();
   };
-  initEruda();
+  void initEruda();
 }
 
 const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
@@ -77,13 +77,13 @@ const MyApp: AppType = ({ Component, pageProps }: AppPropsWithLayout) => {
     const { chatInstance, user } = lp.initData ?? {};
 
     if (chatInstance) {
-      router.push(`/chat/${chatInstance}?userId=${user?.id}`);
+      void router.push(`/chat/${chatInstance}?userId=${user?.id}`);
     }
 
     return () => {
       mainButton.unmount();
     };
-  }, []);
+  }, [router]);
 
   return (
     <>
